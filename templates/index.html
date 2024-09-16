@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Processor</title>
+    <title>Christian's Whitaker's Words</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
         .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
@@ -12,18 +12,22 @@
         .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #2196F3; }
         input:checked + .slider:before { transform: translateX(26px); }
-        #output { width: 100%; height: 200px; margin-top: 20px; }
+        #input { width: 100%; margin-top: 20px; }
+        #output { width: 100%; min-height: 200px; margin-top: 20px; resize: vertical; overflow-y: auto; }
+        #controls { margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>Word Processor</h1>
+    <h1>Christian's Whitaker's Words</h1>
     <input type="text" id="input" placeholder="Enter text">
-    <label class="switch">
-        <input type="checkbox" id="modeToggle">
-        <span class="slider"></span>
-    </label>
-    <span id="modeLabel">Latin</span>
-    <button onclick="processInput()">Process</button>
+    <div id="controls">
+        <label class="switch">
+            <input type="checkbox" id="modeToggle">
+            <span class="slider"></span>
+        </label>
+        <span id="modeLabel">Latin</span>
+        <button onclick="processInput()">Translate!</button>
+    </div>
     <textarea id="output" readonly></textarea>
 
     <script>
@@ -49,6 +53,8 @@
             .then(response => response.json())
             .then(data => {
                 output.value = data.output;
+                output.style.height = 'auto';
+                output.style.height = output.scrollHeight + 'px';
             })
             .catch((error) => {
                 console.error('Error:', error);
