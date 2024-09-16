@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Processor</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #2196F3; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        #output { width: 100%; height: 200px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Word Processor</h1>
+    <input type="text" id="input" placeholder="Enter text">
+    <label class="switch">
+        <input type="checkbox" id="modeToggle">
+        <span class="slider"></span>
+    </label>
+    <span id="modeLabel">Latin</span>
+    <button onclick="processInput()">Process</button>
+    <textarea id="output" readonly></textarea>
+
+    <script>
+        const modeToggle = document.getElementById('modeToggle');
+        const modeLabel = document.getElementById('modeLabel');
+
+        modeToggle.addEventListener('change', function() {
+            modeLabel.textContent = this.checked ? 'English' : 'Latin';
+        });
+
+        function processInput() {
+            const input = document.getElementById('input').value;
+            const mode = modeToggle.checked ? 'English' : 'Latin';
+            const output = document.getElementById('output');
+
+            fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: input, mode: mode }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                output.value = data.output;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                output.value = 'An error occurred while processing the input.';
+            });
+        }
+    </script>
+</body>
+</html>
